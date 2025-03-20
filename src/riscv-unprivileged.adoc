@@ -29,14 +29,14 @@ include::../docs-resources/global-config.adoc[]
 :sectnums:
 :sectnumlevels: 5
 :toc: left
-:toclevels: 5 
+:toclevels: 5
 :source-highlighter: pygments
 ifdef::backend-pdf[]
 :source-highlighter: rouge
 endif::[]
 :table-caption: Table
 :figure-caption: Figure
-:xrefstyle: short 
+:xrefstyle: short
 :chapter-refsig: Chapter
 :section-refsig: Section
 :appendix-refsig: Appendix
@@ -160,6 +160,8 @@ include::colophon.adoc[]
 include::intro.adoc[]
 include::rv32.adoc[]
 include::rv32e.adoc[]
+:cheri_base_ext_name: RV32CH/RV64CH
+include::rv32-64-cheri.adoc[]
 include::rv64.adoc[]
 include::rv128.adoc[]
 include::zifencei.adoc[]
@@ -204,6 +206,10 @@ include::vector-examples.adoc[]
 include::calling-convention.adoc[]
 //include::fraclmul.adoc[]
 //End of Vector appendices
+// CHERI appendices
+include::cheri/app-cap-description.adoc[]
+include::cheri/app-cheri-instructions.adoc[]
+// End of CHERI appendices
 include::index.adoc[]
 // this is generated generated from index markers.
 include::bibliography.adoc[]

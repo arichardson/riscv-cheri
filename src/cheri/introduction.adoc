@@ -125,7 +125,7 @@ integer addresses *or* CHERI capabilities for memory accesses. Hybrid software
 requires the CHERI RISC-V hart to support {cheri_base_ext_name} and
 {cheri_default_ext_name}.
 
-See xref:riscv-extensions[xrefstyle=short] for compatibility with other RISC-V
+See xref:app-cheri-instructions[xrefstyle=short] for compatibility with other RISC-V
 extensions.
 
 === Risks and Known Uncertainty

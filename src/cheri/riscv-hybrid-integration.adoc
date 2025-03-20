@@ -32,7 +32,7 @@ In {cheri_int_mode_name}, <<ddc>> is implicitly used. In {cheri_cap_mode_name}, 
 capability is supplied as an explicit *c* operand register to the instruction.
 * The set of instructions that is available for execution. Some instructions
 are available in {cheri_int_mode_name} but not {cheri_cap_mode_name} and vice-versa (see
-xref:riscv-extensions[xrefstyle=short]).
+xref:app-cheri-instructions[xrefstyle=short]).
 
 NOTE: The implication is that the CHERI execution mode is always {cheri_cap_mode_name} on
 implementations that support {cheri_base_ext_name}, but not

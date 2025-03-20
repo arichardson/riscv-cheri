@@ -1,5 +1,6 @@
-[#riscv-extensions]
-== RISC-V Instructions and Extensions Reference
+[appendix]
+[#app-cheri-instructions]
+== RISC-V Instructions with different behavior for {cheri_base_ext_name}
 
 These instruction pages are for the new CHERI instructions, and some existing RISC-V
 instructions where the effect of CHERI needs specific details.
