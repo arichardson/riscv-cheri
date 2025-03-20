@@ -16,7 +16,7 @@
 :experimental:
 :reproducible:
 :imagesoutdir: {imagesoutdir}
-:bibtex-file: {srcdir}/riscv-cheri.bib
+:bibtex-file: {srcdir}/cheri/riscv-cheri.bib
 :bibtex-order: alphabetical
 :bibtex-style: apa
 :icons: font
@@ -37,7 +37,7 @@ endif::[]
 :attribute-missing: warn
 
 // Sail source code
-:sail-doc: {srcdir}/generated/riscv_RV64.json
+:sail-doc: {srcdir}/cheri/generated/riscv_RV64.json
 
 ///////////////////////////////////////////////////////////////////////////////
 // Top-level CHERI definitions
