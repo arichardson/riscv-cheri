@@ -157,6 +157,7 @@ December 2019._
 
 //the colophon allows for a section after the preamble that is part of the frontmatter and therefore not assigned a page number.
 include::colophon.adoc[]
+
 include::intro.adoc[]
 include::rv32.adoc[]
 include::rv32e.adoc[]
