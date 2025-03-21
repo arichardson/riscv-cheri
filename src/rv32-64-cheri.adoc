@@ -154,12 +154,12 @@ With {cheri_base_ext_name} instruction fetches, jumps, and memory accesses may r
 No other exception paths are added: in particular, capability manipulations do not trap, but may clear the tag on the result capability if the operation is not permitted.
 
 [#section_cap_instructions]
-== {cheri_base_ext_name} Instructions
+=== {cheri_base_ext_name} Instructions
 
 {cheri_base_ext_name} introduces new instructions to the base RISC-V integer
 ISA to inspect and operate on capabilities held in registers.
 
-== Capability Inspection Instructions
+=== Capability Inspection Instructions
 
 These instructions allow software to inspect the fields of a capability held
 in a *c* register. The output is an integer value written to an *x* register
@@ -176,7 +176,7 @@ include::cheri/insns/sceq_32bit.adoc[]
 include::cheri/insns/scss_32bit.adoc[]
 include::cheri/insns/cram_32bit.adoc[]
 
-== Capability Manipulation Instructions
+=== Capability Manipulation Instructions
 
 These instructions allow software to manipulate the fields of a capability held
 in a *c* register. The output is a capability written to a *c* register with
@@ -196,7 +196,7 @@ include::cheri/insns/scbndsr_32bit.adoc[]
 include::cheri/insns/sentry_32bit.adoc[]
 include::cheri/insns/cbld_32bit.adoc[]
 
-== Capability Load and Store Instructions
+=== Capability Load and Store Instructions
 
 A load capability instruction, <<LC>>, reads CLEN bits from memory together with
 its tag and writes the result to a *c* register. The capability authorizing the
