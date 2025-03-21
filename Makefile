@@ -75,7 +75,8 @@ DOCS_HTML := $(addprefix $(BUILD_DIR)/, $(addsuffix .html, $(DOCS)))
 DOCS_EPUB := $(addprefix $(BUILD_DIR)/, $(addsuffix .epub, $(DOCS)))
 
 ENV := LANG=C.utf8
-XTRA_ADOC_OPTS :=
+# Default to building only the CHERI changes
+XTRA_ADOC_OPTS ?= -a minimal_cheri_chages_doc=1
 ASCIIDOCTOR_PDF := $(ENV) asciidoctor-pdf
 ASCIIDOCTOR_HTML := $(ENV) asciidoctor
 ASCIIDOCTOR_EPUB := $(ENV) asciidoctor-epub3
