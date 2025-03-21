@@ -152,3 +152,98 @@ This allows code fetch to be bounded, preventing a wide range of attacks that su
 
 With {cheri_base_ext_name} instruction fetches, jumps, and memory accesses may result in a fatal trap if the authorizing capability does grant the required permissions or the access is out of bounds.
 No other exception paths are added: in particular, capability manipulations do not trap, but may clear the tag on the result capability if the operation is not permitted.
+
+[#section_cap_instructions]
+== {cheri_base_ext_name} Instructions
+
+{cheri_base_ext_name} introduces new instructions to the base RISC-V integer
+ISA to inspect and operate on capabilities held in registers.
+
+== Capability Inspection Instructions
+
+These instructions allow software to inspect the fields of a capability held
+in a *c* register. The output is an integer value written to an *x* register
+representing the decoded field of the capability, such as the permissions or
+bounds. These instructions do not cause exceptions.
+
+include::cheri/insns/gctag_32bit.adoc[]
+include::cheri/insns/gcperm_32bit.adoc[]
+include::cheri/insns/gctype_32bit.adoc[]
+include::cheri/insns/gcbase_32bit.adoc[]
+include::cheri/insns/gclen_32bit.adoc[]
+include::cheri/insns/gchi_32bit.adoc[]
+include::cheri/insns/sceq_32bit.adoc[]
+include::cheri/insns/scss_32bit.adoc[]
+include::cheri/insns/cram_32bit.adoc[]
+
+== Capability Manipulation Instructions
+
+These instructions allow software to manipulate the fields of a capability held
+in a *c* register. The output is a capability written to a *c* register with
+its fields modified. The output capability has its tag set to 0 if the
+input capability did not have a tag set, the output capability has more
+permissions or larger bounds compared to the input capability, or the operation
+results in a capability with malformed bounds. These instructions do not give
+rise to exceptions.
+
+include::cheri/insns/cmv_32bit.adoc[]
+include::cheri/insns/cadd_32bit.adoc[]
+include::cheri/insns/scaddr_32bit.adoc[]
+include::cheri/insns/schi_32bit.adoc[]
+include::cheri/insns/acperm_32bit.adoc[]
+include::cheri/insns/scbnds_32bit.adoc[]
+include::cheri/insns/scbndsr_32bit.adoc[]
+include::cheri/insns/sentry_32bit.adoc[]
+include::cheri/insns/cbld_32bit.adoc[]
+
+== Capability Load and Store Instructions
+
+A load capability instruction, <<LC>>, reads CLEN bits from memory together with
+its tag and writes the result to a *c* register. The capability authorizing the
+memory access is provided in a *c* source register, so the effective address is
+obtained by incrementing that capability with the sign-extended 12-bit offset.
+
+A store capability instruction, <<SC>>, writes CLEN bits and the tag in a *c* register
+to memory. The capability authorizing the memory access is provided in a *c*
+source register, so the effective address is obtained by incrementing that
+capability with the sign-extended 12-bit offset.
+
+<<LC>> and <<SC>> instructions cause CHERI exceptions if the
+authorizing capability fails any of the following checks:
+
+* The tag is zero
+* The capability is sealed
+* At least one byte of the memory access is outside the capability's bounds
+* For loads, the read permission must be set in AP
+* For stores, the write permission must be set in AP
+
+Capability load and store instructions also cause load or store/AMO address
+misaligned exceptions if the address is not naturally aligned to a CLEN
+boundary.
+
+Misaligned capability loads and stores are errors.  Implementations must
+generate exceptions for misaligned capability loads and stores even if they
+allow misaligned integer loads and stores to complete normally.  Execution
+environments must report misaligned capability loads and stores as errors
+and not attempt to emulate them using byte access.  The Zicclsm extension
+does not affect capability loads and stores.  Software which uses capability
+loads and stores to copy data other than capabilities must ensure that
+addresses are aligned.
+
+NOTE: Since there is only one tag per aligned CLEN bit block in memory, it is not
+possible to represent a capability value complete with its tag at an
+address not aligned to CLEN. Therefore, <<LC>> and <<SC>> give rise to
+misaligned address fault exceptions when the effective address to access is
+misaligned, even if the implementation supports Zicclsm. To transfer CLEN
+misaligned bits without a tag, use integer loads and stores.
+
+[#tags_cleared_by_permissions]
+For loads, the tag of the capability loaded from memory is cleared if the
+authorizing capability does not grant permission to read capabilities (i.e.
+both <<r_perm>> and <<c_perm>> must be set in AP). For stores, the tag of the
+capability written to memory is cleared if the authorizing capability does not
+grant permission to write capabilities (i.e. both <<w_perm>> and <<c_perm>>
+must be set in AP).
+
+include::cheri/insns/load_32bit_cap.adoc[]
+include::cheri/insns/store_32bit_cap.adoc[]
