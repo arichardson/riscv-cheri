@@ -1,4 +1,3 @@
-[appendix]
 [#section_cap_description]
 == Anatomy of Capabilities in {cheri_base_ext_name}
 

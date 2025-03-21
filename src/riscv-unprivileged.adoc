@@ -155,13 +155,13 @@ Please cite as: “The RISC-V Instruction Set Manual, Volume I: User-Level ISA, 
 Version 20191214-draft”, Editors Andrew Waterman and Krste Asanović, RISC-V Foundation,
 December 2019._
 
+include::cheri/attributes.adoc[]
 //the colophon allows for a section after the preamble that is part of the frontmatter and therefore not assigned a page number.
 include::colophon.adoc[]
 
 include::intro.adoc[]
 include::rv32.adoc[]
 include::rv32e.adoc[]
-:cheri_base_ext_name: RV32CH/RV64CH
 include::rv32-64-cheri.adoc[]
 include::rv64.adoc[]
 include::rv128.adoc[]
@@ -208,7 +208,9 @@ include::calling-convention.adoc[]
 //include::fraclmul.adoc[]
 //End of Vector appendices
 // CHERI appendices
+[appendix]
 include::cheri/app-cap-description.adoc[]
+[appendix]
 include::cheri/app-cheri-instructions.adoc[]
 // End of CHERI appendices
 include::index.adoc[]
