@@ -98,11 +98,14 @@ REQUIRES := --require=asciidoctor-bibtex \
 # the Sail code and can be embedded. We don't vendor it
 # into this repo since it's quite large (~4MB).
 SAIL_ASCIIDOC_JSON_URL_FILE = riscv_RV64.json.url
-SAIL_ASCIIDOC_JSON = $(SRC_DIR)/cheri/generated/riscv_RV64.json
+CHERI_GEN_DIR = $(SRC_DIR)/cheri/generated
+SAIL_ASCIIDOC_JSON = $(CHERI_GEN_DIR)/riscv_RV64.json
 
+$(CHERI_GEN_DIR):
+	mkdir -p "$@"
 # Download the Sail JSON. The URL is stored in a file so if the URL changes
 # Make will know to download it again.
-$(SAIL_ASCIIDOC_JSON): $(SAIL_ASCIIDOC_JSON_URL_FILE)
+$(SAIL_ASCIIDOC_JSON): $(SAIL_ASCIIDOC_JSON_URL_FILE) | $(CHERI_GEN_DIR)
 	@curl --location '$(shell cat $<)' --output $@
 
 .PHONY: all build clean build-container build-no-container build-docs build-pdf build-html build-epub submodule-check
