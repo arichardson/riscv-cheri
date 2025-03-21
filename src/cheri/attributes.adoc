@@ -1,5 +1,6 @@
 // Sail source code
-:sail-doc: {srcdir}/cheri/generated/riscv_RV64.json
+:sail-doc: src/cheri/generated/riscv_RV64.json
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Top-level CHERI definitions
