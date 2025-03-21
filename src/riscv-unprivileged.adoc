@@ -167,6 +167,8 @@ include::rv64.adoc[]
 include::rv128.adoc[]
 include::zifencei.adoc[]
 include::zicsr.adoc[]
+// Reduce the build time to only include the base spec+CHERI changes
+ifndef::minimal_cheri_chages_doc[]
 include::counters.adoc[]
 include::zihintntl.adoc[]
 include::zihintpause.adoc[]
@@ -207,6 +209,7 @@ include::vector-examples.adoc[]
 include::calling-convention.adoc[]
 //include::fraclmul.adoc[]
 //End of Vector appendices
+endif::[]
 // CHERI appendices
 [appendix]
 include::cheri/app-cap-description.adoc[]
