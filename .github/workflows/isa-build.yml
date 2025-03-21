@@ -61,7 +61,9 @@ jobs:
           echo "EXTRA_ASCIIDOC_OPTIONS=-a github_commit_sha=$GITHUB_SHA" >> "$GITHUB_ENV"
         if: github.event_name == 'push'
       - name: Build standalone CHERI spec
-        run: make -f Makefile.cheri all
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/build riscvintl/riscv-docs-base-container-image:latest \
+          /bin/sh -c "make -j$(nproc) -f Makefile.cheri all"
 
     # Upload the riscv-privileged PDF file
       - name: Upload riscv-privileged.pdf

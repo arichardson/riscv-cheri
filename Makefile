@@ -101,6 +101,10 @@ SAIL_ASCIIDOC_JSON_URL_FILE = riscv_RV64.json.url
 CHERI_GEN_DIR = $(SRC_DIR)/cheri/generated
 SAIL_ASCIIDOC_JSON = $(CHERI_GEN_DIR)/riscv_RV64.json
 
+.PHONY: all build clean build-container build-no-container build-docs build-pdf build-html build-epub submodule-check generate
+
+all: build
+
 $(CHERI_GEN_DIR):
 	mkdir -p "$@"
 # Download the Sail JSON. The URL is stored in a file so if the URL changes
@@ -108,9 +112,7 @@ $(CHERI_GEN_DIR):
 $(SAIL_ASCIIDOC_JSON): $(SAIL_ASCIIDOC_JSON_URL_FILE) | $(CHERI_GEN_DIR)
 	@curl --location '$(shell cat $<)' --output $@
 
-.PHONY: all build clean build-container build-no-container build-docs build-pdf build-html build-epub submodule-check
-
-all: build
+generate: $(SAIL_ASCIIDOC_JSON)
 
 # Check if the docs-resources/global-config.adoc file exists. If not, the user forgot to check out submodules.
 submodule-check:
