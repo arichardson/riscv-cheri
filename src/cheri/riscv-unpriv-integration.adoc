@@ -642,7 +642,7 @@ NOTE: The default settings all match <<rv64y_cap_description>>.
 | CAP_MAX_E   | integer values       | {cap_rv64_exp_max}   | Maximum exponent value
 | REP_RANGE   | rc1/r0               | rc1                  | Whether out-of-bounds addresses are representable
 4+| *Parameters used for permissions encoding in the <<AP-field>>*
-| AP_MAX      | integer values       | all ones             | Value of the <<AP-field>> giving maximum permissions
+| AP_MAX      | integer values       | 0x3f                 | Value of the <<AP-field>> giving maximum permissions
 | AP_ENC      | full<suffix>/ part<suffix>| full1             | Encoding scheme for the <<AP-field>>
 |==============================================================================
 

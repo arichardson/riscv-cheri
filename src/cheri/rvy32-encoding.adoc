@@ -27,7 +27,7 @@ The bit ranges in <<cap_encoding_xlen32_field_table>> are relative to the 32-bit
 | Field      | Bit range | Comment
 | SDP        | 31:30     | <<SDP-field, Software-Defined Permissions>>.
 | AP         | 29:25     | <<AP-field-encoding32, Architectural Permissions>> (includes fields for <<section_cheri_hybrid_ext>> and <<section_zylevels1>>).
-| G          | 24        | <<zylevels1_gl_flag, Global (G) flag>> (<<section_zylevels1>> only).
+| G          | 24        | <<zylevels1_gl_flag, Global (G) flag>> (<<section_zylevels1>> only), see <<section_cap_global_encoding>>.
 | CT         | 20        | <<sec_cap_type, Capability Type field>>.
 | EF         | 19        | Exponent format for the <<section_cap_bounds,capability bounds>> decoding, see <<rvy64_uni_base_name_bndsenc_param_summary>>.
 | LE         | 18        | Length (`L[8]`) or exponent (`E[4]`) MSB field for the <<section_cap_bounds32,capability bounds>> decoding.
@@ -210,9 +210,9 @@ The <<AP-field>> states shown in <<cap_perms_encoding_nolevels32_hybrid>> are al
 [float="center",align="center",cols="1,1,1,1,4",options="header"]
 |===
 | Quadrant | Entries | LG     | SL | Comment
-| 2        | 6       | 0      | 1  | R, W, C, LM, SL granted
-| 2        | 7       | 0      | 0  | R, W, C, LM granted
-| 3        | 6       | 1      | 1  | R, W, C, LM, LG, SL granted
+| 2        | 6       | 0      | 0  | R, W, C, LM granted
+| 2        | 7       | 0      | 1  | R, W, C, LM, SL granted
+| 3        | 6       | 1      | 0  | R, W, C, LM, LG granted
 |===
 
 [#zylevels1_mods_into_ap_field]
@@ -220,9 +220,9 @@ The <<AP-field>> states shown in <<cap_perms_encoding_nolevels32_hybrid>> are al
 [float="center",align="center",cols="1,1,1,1,4",options="header"]
 |===
 | Quadrant | Entries | LG     | SL | Comment
-| 1        | all     | AP[2:0]<6 | !AP[1]  | LG conditionally granted, SL always granted
-| 3        | 3       | 1      | 1  | LG and SL granted
-| 3        | 7       | 1      | 0  | LG granted
+| 1        | all     | AP[2:0]<6 | !AP[1]  | LG and SL conditionally granted
+| 3        | 3       | 1      | 0  | LG granted
+| 3        | 7       | 1      | 1  | LG and SL granted
 |===
 
 The following <<CLRPERM>> rules are defined:
@@ -274,13 +274,13 @@ This section is non-normative - it summarizes the overall encoded permissions ta
 10+| *Quadrant 2: Restricted capability data read/write*
 |Field[2:0]| R | W | C | LM | LG | SL | X | ASR | Notes
 | 3       | ✔ |   | ✔ |    |    |   |   |     | Data & Cap RO (without <<lm_perm>>)
-| 6       | ✔ | ✔ | ✔ | ✔  |    | ✔ |   |     | Data & Cap RW (with <<zylevels1_sl_perm>>, no <<zylevels1_lg_perm>>)
-| 7       | ✔ | ✔ | ✔ | ✔  |    |   |   |     | Data & Cap RW (no <<zylevels1_sl_perm>>, no <<zylevels1_lg_perm>>)
+| 6       | ✔ | ✔ | ✔ | ✔  |    |   |   |     | Data & Cap RW (no <<zylevels1_sl_perm>>, no <<zylevels1_lg_perm>>)
+| 7       | ✔ | ✔ | ✔ | ✔  |    | ✔ |   |     | Data & Cap RW (with <<zylevels1_sl_perm>>, no <<zylevels1_lg_perm>>)
 10+| *Quadrant 3: Capability data read/write*
 |Field[2:0]| R | W | C | LM | LG | SL | X | ASR | Notes
 | 3       | ✔ |   | ✔ | ✔  | ✔  |   |   |     | Data & Cap RO
-| 6       | ✔ | ✔ | ✔ | ✔  | ✔  | ✔ |   |     | Data & Cap RW (with <<zylevels1_sl_perm>>)
-| 7       | ✔ | ✔ | ✔ | ✔  | ✔  |   |   |     | Data & Cap RW (no <<zylevels1_sl_perm>>)
+| 6       | ✔ | ✔ | ✔ | ✔  | ✔  |   |   |     | Data & Cap RW (no <<zylevels1_sl_perm>>)
+| 7       | ✔ | ✔ | ✔ | ✔  | ✔  | ✔ |   |     | Data & Cap RW (with <<zylevels1_sl_perm>>)
 |==============================================================================
 
 ^1^ This replaces the <<root-rx-cap>> and <<root-rw-cap>> capability encoding.
