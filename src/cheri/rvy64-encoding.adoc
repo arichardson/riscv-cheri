@@ -46,7 +46,11 @@ When <<section_cheri_hybrid_ext>> is implemented:
 When <<section_zylevels1>> is implemented:
 +
 * The <<zylevels1_gl_flag>> is implemented, otherwise _reserved zero_.
+  The encoded value `1` indicates a <<levels_globalcap>> and `0` indicates a <<levels_localcap>>.
 * The <<AP-field>> includes <<zylevels1_lg_perm>> and <<zylevels1_sl_perm>>, otherwise both are _reserved zero_.
+
+NOTE: Bit patterns with `G`, `AP[6]`, or `AP[7]` set fail <<section_cap_integrity,integrity>> checks on harts that do not implement <<section_zylevels1>>.
+ Software that constructs capabilities from stored bit patterns (for example, using <<CBLD>>) and needs to run on harts both with and without <<section_zylevels1>> therefore has to clear these bits on harts that do not implement it.
 
 ==== Capability-Encoding Format Parameter Summary
 
@@ -58,7 +62,7 @@ When <<section_zylevels1>> is implemented:
 | EW          | {cap_rv64_exp_width} | Exponent width for the bounds encoding
 | CAP_MAX_E   | {cap_rv64_exp_max}   | Maximum exponent value
 | SDPLEN      | {cap_rv64_sdp_width} | Width of the <<SDP-field>>.
-| AP_MAX      | All ones             | Value of the <<AP-field>> giving maximum permissions
+| AP_MAX      | All ones             | Value of the <<AP-field>> giving maximum permissions (`0xFF` if <<section_zylevels1>> is implemented, otherwise `0x3F`)
 | AP_ENC      | full1                | Encoding scheme for the <<AP-field>> - all combinations are representable
 | REP_RANGE   | rc1                  | Whether out-of-bounds addresses are representable
 |==============================================================================
@@ -72,7 +76,7 @@ endif::[]
 [#AP-field-encoding64, reftext="AP field encoding"]
 ==== Architectural Permissions (AP) Encoding
 
-The permissions field is {cap_rv64_perms_width} bits wide and is encoded using one bit per architectural permission as shown in xref:cap_perms_encoding64[xrefstyle=short].
+The permissions field is {cap_rv64_perms_width} bits wide and is encoded using one bit per architectural permission as shown in xref:cap_perms_encoding64[xrefstyle=short], where a bit is 1 if the permission is granted.
 Some bit patterns are _reserved_ because they encode illegal combinations of permissions (see xref:sec_permission_transitions[xrefstyle=short]).
 
 .Encoding of architectural permissions for {rv64y_uni_base_name}
@@ -557,6 +561,7 @@ endif::[]
 The NULL capability is represented with 0 in all fields including the {ctag}.
 This implies that it has no permissions and its exponent E is CAP_MAX_E ({cap_rv64_exp_max}).
 The exponent value causes its bounds to cover the entire address space, but no permissions are granted and so it cannot successfully be used to grant authorization.
+When <<section_zylevels1>> is implemented, `G=0` also makes it a <<levels_localcap>>.
 
 [#section_infinite_cap_encoding]
 ==== Infinite Capability Encoding
@@ -571,6 +576,7 @@ This encoding is for an _Infinite Capability_ value, which grants all permission
 | {ctag_title}  | one   | Capability is valid
 | <<SDP-field64,SDP>> | ones  | Grants all permissions
 | <<AP-field,AP>>     | AP_MAX | Grants all permissions
+| G             | one   | <<levels_globalcap,Global capability>> (<<section_zylevels1>> only)
 | CT            | zero  | Unsealed
 | EF            | zero  | Internal exponent format
 | T             | zeros | Top bound address bits
@@ -584,4 +590,5 @@ This encoding is for an _Infinite Capability_ value, which grants all permission
 ^1^ If an infinite capability is used as a constant in either hardware or software, then the address field will typically be set to 0.
 If the address field is non-zero, then it is still referred to as the _Infinite Capability_, and it still authorizes all memory accesses.
 
-NOTE: Permissions added by extensions (such as those of <<section_zylevels1>>) are presumed present in the _Infinite Capability_, which may involve redefining the AP_MAX value.
+NOTE: Permissions added by extensions are present in the _Infinite Capability_, which can change its encoding.
+ For example, implementing <<section_zylevels1>> sets `AP[7:6]` and `G` to one in the _Infinite Capability_.
