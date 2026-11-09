@@ -52,6 +52,41 @@ When <<section_zylevels1>> is implemented:
 NOTE: Bit patterns with `G`, `AP[6]`, or `AP[7]` set fail <<section_cap_integrity,integrity>> checks on harts that do not implement <<section_zylevels1>>.
  Software that constructs capabilities from stored bit patterns (for example, using <<CBLD>>) and needs to run on harts both with and without <<section_zylevels1>> therefore has to clear these bits on harts that do not implement it.
 
+[NOTE]
+.Example: one binary for harts with and without {cheri_levels1_ext_name}
+====
+The static linker can always emit capability templates (the untagged capabilities that the run-time linker turns into valid capabilities using <<CBLD>>) as if <<section_zylevels1>> were implemented.
+It sets `G` to one, sets `AP[6]` (LG) if both R and C are granted, and sets `AP[7]` (SL) if both W and C are granted, for example:
+
+[options=header,align=center,cols="2,3,1,2"]
+|===
+| Target                | Permissions         | AP emitted | AP on harts without Zylg
+| Writable data         | R, W, C, LM, LG, SL | `0xE7`     | `0x27`
+| Read-only data        | R, C, LM, LG        | `0x65`     | `0x25`
+| Data without pointers | R, W                | `0x06`     | `0x06`
+|===
+
+On a hart that implements <<section_zylevels1>>, the run-time linker (or startup code) can use each template directly, with a <<LOAD_CAP>>, <<CBLD>>, <<STORE_CAP>> sequence per template.
+On a hart that does not, every template fails the integrity check in <<CBLD>>, so the run-time linker has to clear these bits first.
+<<GCPERM>> cannot tell the two cases apart because it reports these bits as one on harts without <<section_zylevels1>>, but the run-time linker can check `G` in the raw metadata of a global root capability using <<GCHI>>.
+On harts without <<section_zylevels1>>, the following sequence processes one template at `a0` using the root capability in `a1`, assuming the template address is already final (as in a position-dependent image):
+
+[source]
+----
+# Once: AND mask that clears G, AP[6] (LG), and AP[7] (SL).
+li      t0, (1 << 52) | (1 << 51) | (1 << 43)
+not     t0, t0
+
+# Per template:
+ld      t1, 0(a0)               # template address
+ld      t2, 8(a0)               # template metadata
+and     t2, t2, t0              # clear the Zylg bits
+yhiw    t1, t1, t2              # untagged capability from t1 and t2
+ybld    t1, a1, t1              # valid if t1 is a subset of the root
+sy      t1, 0(a0)               # replace the template
+----
+====
+
 ==== Capability-Encoding Format Parameter Summary
 
 .{rv64y_uni_base_name} capability-encoding format parameters
